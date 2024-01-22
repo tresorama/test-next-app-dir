@@ -1,0 +1,15 @@
+{
+  "navMain": {
+    "home": "Home",
+    "about": "About",
+    "blog": "Blog",
+    "dashboard": "Dashboard"
+  },
+  "home": {
+    "title": "Home"
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "We are born in 1999 ..."
+  }
+}

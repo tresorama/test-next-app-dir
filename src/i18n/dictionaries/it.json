@@ -1,0 +1,15 @@
+{
+  "navMain": {
+    "home": "Inizio",
+    "about": "Chi Siamo",
+    "blog": "Blog",
+    "dashboard": "Dashboard"
+  },
+  "home": {
+    "title": "Inizio"
+  },
+  "about": {
+    "title": "Chi Siamo",
+    "subtitle": "Siamo nati nel 1999 ..."
+  }
+}
