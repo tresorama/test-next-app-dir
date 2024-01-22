@@ -1,24 +1,18 @@
 import { headers } from "next/headers";
 import { getPreferredLocaleFromRequestHeader } from "@/i18n/i18n.utils";
-import { NavMain } from "../_components/NavMain";
-import { LanguageSwitcherBar } from "./_components/LanguageSwitcherBar";
 import { getDictionary } from "@/i18n/server/i18n.dictionaries";
 import { I18nDictionaryProvider } from "@/i18n/client/i18n.dictionary-provider";
-import { supportedLocales } from "@/i18n/i18n.config";
+import { LanguageSwitcherBar } from "./_components/LanguageSwitcherBar";
+import { NavMain } from "../_components/NavMain";
 
-// Return a list of `params` to populate the [locale] dynamic segment
-export async function generateStaticParams() {
-  return supportedLocales.map(locale => ({ locale }));
-}
-
-type LayoutProps = {
+type Props = {
   params: {
     locale: string,
   };
   children: React.ReactNode;
 };
 
-export default async function Layout({ children, params }: LayoutProps) {
+export default async function Template({ params, children }: Props) {
 
   // i18n
   const { locale } = params;
@@ -35,6 +29,7 @@ export default async function Layout({ children, params }: LayoutProps) {
           <NavMain />
         </div>
       </header>
+      {/* Page */}
       {children}
     </I18nDictionaryProvider>
   );
