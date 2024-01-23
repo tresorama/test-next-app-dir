@@ -88,8 +88,8 @@ export const {
       // if is protected, redirect to login page
       // otherwise allow the request
       const requestIsProtected = [
-        () => url.pathname.startsWith("/dashboard"),
-        () => url.pathname.startsWith("/protected"),
+        () => url.pathname.includes("/dashboard"),
+        () => url.pathname.includes("/protected"),
       ].some(fn => fn());
 
       if (!requestIsProtected) {

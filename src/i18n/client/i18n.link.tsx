@@ -2,15 +2,15 @@
 
 import { type AnchorHTMLAttributes } from 'react';
 import NextLink, { type LinkProps } from 'next/link';
-import { pathnameIsMultilingual } from '../i18n.utils';
+import { extractLocaleDataFromPathname } from '../i18n.utils';
 import { type SupportedLocale } from '../i18n.config';
-import { useLocale } from './i18n.use-locale';
+import { useLocaleData } from './i18n.use-locale-data';
 
 const localizeHref = (href: LinkProps['href'], locale: SupportedLocale) => {
 
   if (typeof href === 'string') {
-    const urlIsMultilingual = pathnameIsMultilingual(href);
-    if (!urlIsMultilingual) return href;
+    const { pathIsMultilangual } = extractLocaleDataFromPathname(href);
+    if (!pathIsMultilangual) return href;
 
     // if (locale === defaultLocale) return href;
     return `/${locale}${href}`;
@@ -18,8 +18,8 @@ const localizeHref = (href: LinkProps['href'], locale: SupportedLocale) => {
   else {
     if (!href.pathname) return href;
 
-    const urlIsMultilingual = pathnameIsMultilingual(href.pathname);
-    if (!urlIsMultilingual) return href;
+    const { pathIsMultilangual } = extractLocaleDataFromPathname(href.pathname);
+    if (!pathIsMultilangual) return href;
 
     // if (locale === defaultLocale) return href;
     const newHref = { ...href };
@@ -31,7 +31,7 @@ const localizeHref = (href: LinkProps['href'], locale: SupportedLocale) => {
 type Props = AnchorHTMLAttributes<HTMLAnchorElement> & LinkProps;
 
 export default function Link(props: Props) {
-  const { currentLocale } = useLocale();
+  const { currentLocale } = useLocaleData();
 
   // rewrite the "href" props prepending the currentLocale
   const localizedHref = localizeHref(props.href, currentLocale);

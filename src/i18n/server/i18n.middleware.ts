@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import {
-  getSupportedLocaleFromPathname,
-  pathnameIsMultilingual,
+  extractLocaleDataFromPathname,
   // getPreferredLocaleFromRequest,
   // pathnameHasSupportedLocale,
 } from "../i18n.utils";
@@ -15,15 +14,20 @@ export const handleInternalization = (request: NextRequest) => {
     pathname: request.nextUrl.pathname
   });
 
+  const {
+    pathIsMultilangual,
+    currentLocale: pathnameLocale,
+  } = extractLocaleDataFromPathname(request.nextUrl.pathname);
+
   debugger;
+
   // if this route is not multilingual do nothing..
-  if (!pathnameIsMultilingual(request.nextUrl.pathname)) {
+  if (!pathIsMultilangual) {
     console.log({ result: "route is not multilingual => return => do nothing" });
     return;
   }
 
   // is the url start with a locale that we support respect it...
-  const pathnameLocale = getSupportedLocaleFromPathname(request.nextUrl.pathname);
   if (pathnameLocale) {
     console.log({ result: "route is multilingual and url start with a locale that we support => return => respect url" });
     return;

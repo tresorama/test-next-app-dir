@@ -1,11 +1,11 @@
 'use client';
 
-import { useLocale } from "@/i18n/client/i18n.use-locale";
+import { useLocaleData } from "@/i18n/client/i18n.use-locale-data";
 
 export const DebugBar = () => {
-  const _useLocale = useLocale();
+  const _useLocaleData = useLocaleData();
   const info = {
-    _useLocale,
+    _useLocaleData,
   };
 
   return (

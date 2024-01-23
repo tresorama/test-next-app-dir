@@ -2,7 +2,7 @@
 
 import Link from "@/i18n/client/i18n.link";
 import { useI18nDictionary } from "@/i18n/client/i18n.dictionary-provider";
-import { useLocale } from "@/i18n/client/i18n.use-locale";
+import { useLocaleData } from "@/i18n/client/i18n.use-locale-data";
 import { DefaultDictionary } from "@/i18n/server/i18n.dictionaries";
 import { cn } from "@/utils/cn";
 
@@ -18,7 +18,7 @@ const navItems: Array<{
   ];
 
 export const NavMain = () => {
-  const { pathnameWithoutLocale } = useLocale();
+  const { pathnameWithoutLocale } = useLocaleData();
   const dictionary = useI18nDictionary();
 
   if (!dictionary) return <>No dictionary</>;

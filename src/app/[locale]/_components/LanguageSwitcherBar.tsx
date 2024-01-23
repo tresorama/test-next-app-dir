@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { SupportedLocale, supportedLocales, defaultLocale } from "@/i18n/i18n.config";
-import { useLocale } from "@/i18n/client/i18n.use-locale";
+import { useLocaleData } from "@/i18n/client/i18n.use-locale-data";
 
 const capitalize = (x: string) => x.slice(0, 1).toUpperCase() + x.slice(1).toLowerCase();
 
@@ -12,7 +12,7 @@ type LanguageSwitcherBarProps = {
 
 export const LanguageSwitcherBar = (props: LanguageSwitcherBarProps) => {
   const router = useRouter();
-  const { pathIsMultilangual, currentLocale } = useLocale();
+  const { pathIsMultilangual, currentLocale } = useLocaleData();
   const refSelect = useRef<HTMLSelectElement>(null);
 
   const handleSubmit = () => {
