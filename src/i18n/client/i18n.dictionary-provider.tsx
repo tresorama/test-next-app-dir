@@ -3,7 +3,7 @@
 import { createContext, useContext } from "react";
 import { type DefaultDictionary } from "../server/i18n.dictionaries";
 
-const ctx = createContext<DefaultDictionary>({} as DefaultDictionary);
+const ctx = createContext<DefaultDictionary | null>(null);
 
 export const I18nDictionaryProvider = ({
   children,

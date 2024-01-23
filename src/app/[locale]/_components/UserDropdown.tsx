@@ -2,7 +2,7 @@
 
 import { User } from "next-auth";
 import { useToggle } from "react-use";
-import { action_logout } from "./logout.action";
+import { action_logout } from "../dashboard/_components/logout.action";
 
 export const UserDropdown = ({ user }: { user: User; }) => {
   const [isOpen, toggle] = useToggle(false);

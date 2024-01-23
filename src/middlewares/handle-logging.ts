@@ -1,6 +1,6 @@
-import { NextRequest } from "next/server";
+import { MiddlewareFunction } from "./middleware.utils.chain";
 
-export const handleLogging = (request: NextRequest) => {
+export const handleLogging: MiddlewareFunction = (request) => {
   console.log("");
   console.log("");
   console.log({
@@ -10,5 +10,6 @@ export const handleLogging = (request: NextRequest) => {
     pathname: request.nextUrl.pathname,
     searchParams: Object.fromEntries(request.nextUrl.searchParams.entries()),
   });
+
   return;
 };

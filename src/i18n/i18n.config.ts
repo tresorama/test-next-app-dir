@@ -10,6 +10,7 @@ export const pathnameIsMultilingual = (pathname: URL['pathname']) => {
     (pathname) => ["", "/"].includes(removeLocaleFromPathname(pathname)),
     (pathname) => removeLocaleFromPathname(pathname).startsWith("/about"),
     (pathname) => removeLocaleFromPathname(pathname).startsWith("/blog"),
+    (pathname) => removeLocaleFromPathname(pathname).startsWith("/dashboard"),
   ];
   return rules.some(fn => fn(pathname));
 };

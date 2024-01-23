@@ -51,6 +51,7 @@ export function composeMiddlewares(...middlwares: MiddlewareFunction[]) {
   }, [] as MiddlewareFunction[]);
 
   return async function middleware(request: NextRequest, evt: NextFetchEvent) {
+
     for (const _middleware of validMiddlewares) {
       const result = await _middleware(request, evt);
 
@@ -62,6 +63,7 @@ export function composeMiddlewares(...middlwares: MiddlewareFunction[]) {
       }
     }
 
-    return NextResponse.next();
+    const response = NextResponse.next();
+    return response;
   };
 }

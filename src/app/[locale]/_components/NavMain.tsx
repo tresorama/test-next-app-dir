@@ -21,6 +21,8 @@ export const NavMain = () => {
   const { pathnameWithoutLocale } = useLocale();
   const dictionary = useI18nDictionary();
 
+  if (!dictionary) return <>No dictionary</>;
+
   return (
     <nav>
       <ul className="flex gap-10">
