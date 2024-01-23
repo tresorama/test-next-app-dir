@@ -32,6 +32,9 @@ type Props = AnchorHTMLAttributes<HTMLAnchorElement> & LinkProps;
 
 export default function Link(props: Props) {
   const { currentLocale } = useLocaleData();
+  if (!currentLocale) {
+    return <NextLink {...props} />;
+  }
 
   // rewrite the "href" props prepending the currentLocale
   const localizedHref = localizeHref(props.href, currentLocale);

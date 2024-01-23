@@ -16,6 +16,9 @@ export const LanguageSwitcherBar = (props: LanguageSwitcherBarProps) => {
   const refSelect = useRef<HTMLSelectElement>(null);
 
   const handleSubmit = () => {
+    // if we do not have current locale we cannot do our logic
+    if (!currentLocale) return;
+
     // get selcted local from <select>
     if (!refSelect.current) return;
     const newLocale = refSelect.current.value as SupportedLocale;
@@ -26,6 +29,10 @@ export const LanguageSwitcherBar = (props: LanguageSwitcherBarProps) => {
     router.push(newUrl.href);
   };
 
+  if (!currentLocale) {
+    // wait until it's available
+    return <></>;
+  }
   if (!pathIsMultilangual) return <></>;
   if (currentLocale !== defaultLocale) {
     // if url start with a `locale` that is not the `defaultLocale` means 
