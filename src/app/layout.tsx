@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { DebugBar } from "./_components/DebugBar";
+import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,12 +12,29 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode; }) {
+  const headerList = headers();
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <DebugBar />
+        <div className="p-4">
+          <DebugJson json={{ headerList }} />
+        </div>
         {children}
       </body>
     </html>
   );
 }
+
+const DebugJson = ({ json }: { json: unknown; }) => (
+  <pre
+    style={{
+      whiteSpace: 'pre',
+      maxWidth: '100%',
+      overflow: 'auto'
+    }}
+  >
+    {JSON.stringify(json, null, 4)}
+  </pre>
+);

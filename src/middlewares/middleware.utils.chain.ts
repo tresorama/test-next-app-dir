@@ -1,69 +1,74 @@
-import {
-  NextResponse,
-  type NextFetchEvent,
-  type NextRequest,
-} from "next/server";
+
+import { mergeHeaders } from "@/utils/merge-headers";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+
+type GoNextMiddleware = () => "continue";
 
 export type MiddlewareFunction = (
   request: NextRequest,
-  evt: NextFetchEvent,
+  next: GoNextMiddleware,
+  event: NextFetchEvent,
 ) =>
-  | NextResponse
-  | Response
-  | Promise<NextResponse>
-  | Promise<NextResponse | void>
-  | Promise<void>
-  | void;
+  | Promise<NextResponse<unknown> | ReturnType<GoNextMiddleware>>;
 
-/**
- * - Registers as many middlwares as needed.
- *
- * - Middlewares are invoked in the order they were registerd.
- *
- * - The first middleware to return the instance of NextResponse breaks the chain.
- *
- * - As in the next docs, middlewares are invoked for every request including next
- *   requests to fetch static assets and the sorts.
- * 
- * @example
- * 
- * // in middleware.ts
- * 
- * export default composeMiddlewares(
- *   (request: NextRequest) => {
- *     console.log("");
- *     console.log("");
- *     console.log({ what: "middleware - handleLogging", pathname: request.nextUrl.pathname });
- *     return;
- *   },
- *   handleInternalization,
- * );
- */
-export function composeMiddlewares(...middlwares: MiddlewareFunction[]) {
-  const validMiddlewares = middlwares.reduce((acc, _middleware) => {
-    if (typeof _middleware === "function") {
-      return [...acc, _middleware];
+export function composeMiddleware(handlers: MiddlewareFunction[] = []) {
+  const validMiddlewareHandlers = handlers
+    .filter((handler) => typeof handler === "function");
+
+  return async function (request: NextRequest, event: NextFetchEvent) {
+
+    const allResponses: NextResponse[] = [];
+
+    // 1. 
+    // run every middleware and collect responses (NextResponse)
+    // until a middleware want to break the chain (redirect or rewrite)
+    for (const fn of validMiddlewareHandlers) {
+      const result = await fn(request, () => "continue", event);
+
+      // go next middleware
+      if (result === 'continue') continue;
+
+
+      // we have a response
+      allResponses.push(result);
+
+
+      // the "middleware" function cannot return a native Response
+      // @see https://nextjs.org/docs/messages/middleware-upgrade-guide#no-response-body
+      // It can only :
+      //   - return `NextResponse.redirect() or NextResponse.rewrite()` 
+      //        => this must break the chian
+      //   - return a mutated request using `NextResponse.next({ request: { /* ... */ }})` 
+      //        => this must NOT break the chain
+      const isRedirect = () => result.headers.get("Location");
+      const isRewrite = () => result.headers.get("x-middleware-rewrite");
+      if (isRedirect() || isRewrite()) {
+        // break the chain
+        break;
+      }
+
     }
 
-    console.warn("Trying to register an invalid middleware: ", _middleware);
+    // 2.
+    // return final response
 
-    return acc;
-  }, [] as MiddlewareFunction[]);
+    // miiddlewares have not returned any response, do nothing...
+    if (allResponses.length === 0) return NextResponse.next();
 
-  return async function middleware(request: NextRequest, evt: NextFetchEvent) {
+    // only one middleware returned a response, return it
+    if (allResponses.length === 1) return allResponses[0];
 
-    for (const _middleware of validMiddlewares) {
-      const result = await _middleware(request, evt);
-
-      if (result instanceof NextResponse) {
-        return result;
-      }
-      if (result instanceof Response) {
-        return result;
-      }
+    // more than one middleware returned a response
+    // merge headers into a final response and return it
+    const finalResponse = allResponses[allResponses.length - 1];
+    const finalHeaders: Headers = mergeHeaders(...allResponses.map(r => r.headers));
+    for (const [key] of Array.from(finalResponse.headers.entries())) {
+      finalResponse.headers.delete(key);
     }
+    for (const [key, value] of Array.from(finalHeaders.entries())) {
+      finalResponse.headers.set(key, value);
+    }
+    return finalResponse;
 
-    const response = NextResponse.next();
-    return response;
   };
 }

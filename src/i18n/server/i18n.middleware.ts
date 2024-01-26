@@ -1,16 +1,16 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import {
   extractLocaleDataFromPathname,
   // getPreferredLocaleFromRequest,
   // pathnameHasSupportedLocale,
 } from "../i18n.utils";
 import { defaultLocale } from "../i18n.config";
+import { type MiddlewareFunction } from "@/middlewares/middleware.utils.chain";
 
-
-export const handleInternalization = (request: NextRequest) => {
+export const handleInternalization: MiddlewareFunction = async (request, next) => {
 
   console.log({
-    what: "midleware - handleInternalization",
+    who: "midleware - handleInternalization",
     pathname: request.nextUrl.pathname
   });
 
@@ -19,27 +19,26 @@ export const handleInternalization = (request: NextRequest) => {
     currentLocale: pathnameLocale,
   } = extractLocaleDataFromPathname(request.nextUrl.pathname);
 
-  debugger;
-
   // if this route is not multilingual do nothing..
   if (!pathIsMultilangual) {
     console.log({ result: "route is not multilingual => return => do nothing" });
-    return;
+    return next();
   }
 
   // is the url start with a locale that we support respect it...
   if (pathnameLocale) {
     console.log({ result: "route is multilingual and url start with a locale that we support => return => respect url" });
-    return;
+    return next();
   }
 
   // redirect to the page with the default locale
   // in that page the user can select a new language with
   // <LanguageSwitcher />
-  console.log({ result: "route is multilingual and url DOES NOT start with a locale that we support => redirect to defaultLocale" });
-  const newUrl = request.nextUrl.clone();
-  newUrl.pathname = `/${defaultLocale}${newUrl.pathname}`;
-  return NextResponse.redirect(newUrl);
+  const newPath = `/${defaultLocale}${request.nextUrl.pathname}`;
+  console.log({ result: "route is multilingual and url DOES NOT start with a locale that we support => redirect to defaultLocale => " + newPath });
+  // const newUrl = request.nextUrl.clone();
+  // newUrl.pathname = 
+  return NextResponse.redirect(new URL(newPath, request.nextUrl));
 
 };
 

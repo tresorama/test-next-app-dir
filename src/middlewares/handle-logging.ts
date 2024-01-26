@@ -1,6 +1,6 @@
-import { MiddlewareFunction } from "./middleware.utils.chain";
+import { type MiddlewareFunction } from "./middleware.utils.chain";
 
-export const handleLogging: MiddlewareFunction = (request) => {
+export const handleLogging: MiddlewareFunction = async (request, next) => {
   console.log("");
   console.log("");
   console.log({
@@ -11,5 +11,5 @@ export const handleLogging: MiddlewareFunction = (request) => {
     searchParams: Object.fromEntries(request.nextUrl.searchParams.entries()),
   });
 
-  return;
+  return next();
 };
