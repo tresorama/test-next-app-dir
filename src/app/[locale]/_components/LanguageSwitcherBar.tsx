@@ -1,8 +1,9 @@
 'use client';
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SupportedLocale, supportedLocales, defaultLocale } from "@/i18n/i18n.config";
 import { useLocaleData } from "@/i18n/client/i18n.use-locale-data";
+import { useClickAway } from "react-use";
 
 const capitalize = (x: string) => x.slice(0, 1).toUpperCase() + x.slice(1).toLowerCase();
 
@@ -12,8 +13,13 @@ type LanguageSwitcherBarProps = {
 
 export const LanguageSwitcherBar = (props: LanguageSwitcherBarProps) => {
   const router = useRouter();
-  const { pathIsMultilangual, currentLocale } = useLocaleData();
+  const { currentLocale } = useLocaleData();
   const refSelect = useRef<HTMLSelectElement>(null);
+
+  // as soon as user click something hide the switcher
+  const [isVisible, setIsVisible] = useState(true);
+  const refWrapper = useRef<HTMLDivElement | null>(null);
+  // useClickAway(refWrapper, () => setIsVisible(false));
 
   const handleSubmit = () => {
     // if we do not have current locale we cannot do our logic
@@ -29,19 +35,20 @@ export const LanguageSwitcherBar = (props: LanguageSwitcherBarProps) => {
     router.push(newUrl.href);
   };
 
-  if (!currentLocale) {
+  if (
     // wait until it's available
-    return <></>;
-  }
-  if (!pathIsMultilangual) return <></>;
-  if (currentLocale !== defaultLocale) {
+    !currentLocale
     // if url start with a `locale` that is not the `defaultLocale` means 
     // that user already selected a locale
+    || currentLocale !== defaultLocale
+    // user clicked outside
+    || !isVisible
+  ) {
     return <></>;
   }
 
   return (
-    <section className="p-4 pb-0">
+    <section ref={refWrapper} className="p-4 pb-0">
       <div className="p-4 bg-neutral-900 flex flex-col items-start gap-2">
         <p>Seleziona la tua lingua preferita</p>
         <select

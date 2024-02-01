@@ -1,14 +1,13 @@
-import { type MiddlewareFunction } from "./middleware.utils.chain";
+import { type MiddlewareFunction } from "./utils.chain";
 
 export const handleLogging: MiddlewareFunction = async (request, next) => {
   console.log("");
   console.log("");
+  console.log("");
+  console.log("=============== REQUEST ========================");
   console.log({
     what: "middleware - handleLogging",
-    method: request.method,
-    url: `${request.nextUrl.pathname}${request.nextUrl.search}`,
-    pathname: request.nextUrl.pathname,
-    searchParams: Object.fromEntries(request.nextUrl.searchParams.entries()),
+    req: `${request.method} ${request.url}`
   });
 
   return next();

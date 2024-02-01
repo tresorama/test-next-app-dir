@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { type MiddlewareFunction } from "./middleware.utils.chain";
+import { type MiddlewareFunction } from "./utils.chain";
 
 export const handlePassRequestDataToServerComponents: MiddlewareFunction = async (request, next) => {
   console.log({

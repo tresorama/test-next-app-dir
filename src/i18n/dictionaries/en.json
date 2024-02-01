@@ -11,5 +11,16 @@
   "about": {
     "title": "About",
     "subtitle": "We are born in 1999 ..."
+  },
+  "auth": {
+    "login": {
+      "title": "Login"
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "Overview",
+      "body": "Select a section from the left"
+    }
   }
 }

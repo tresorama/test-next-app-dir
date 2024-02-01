@@ -1,5 +1,5 @@
 import acceptLanguageParser from 'accept-language-parser';
-import { SupportedLocale, multilingualPathsRules, supportedLocales } from "./i18n.config";
+import { SupportedLocale, supportedLocales } from "./i18n.config";
 import { removePrefix } from './utils/string.utils';
 
 // small functions
@@ -35,15 +35,6 @@ export const removeSupportedLocaleFromPathname = (pathname: URL['pathname']) => 
   return pathnameWithoutLocale;
 };
 
-/**
- * Given a pathname return if this pathname is a multilanguale pathname, 
- * meaning that we provide translations for this path.
- */
-export const pathnameIsMultilingual = (pathname: URL['pathname']) => {
-  const pathnameWithoutLocale = removeSupportedLocaleFromPathname(pathname);
-  return multilingualPathsRules.some(fn => fn(pathnameWithoutLocale));
-};
-
 // /**
 // * - Check if pathname starts with a`locale` defined in `supportedLocales`
 // * - If request is `/en/xxxx` and `supportedLocales = [ "en", "it" ]` it returns `true`
@@ -62,12 +53,10 @@ export const pathnameIsMultilingual = (pathname: URL['pathname']) => {
 export function extractLocaleDataFromPathname(pathname: URL['pathname']) {
   const currentLocale = extractSupportedLocaleFromPathname(pathname);
   const pathnameWithoutLocale = removeSupportedLocaleFromPathname(pathname);
-  const pathIsMultilangual = pathnameIsMultilingual(pathname);
   return {
     pathname,
     pathnameWithoutLocale,
     currentLocale,
-    pathIsMultilangual,
   };
 }
 

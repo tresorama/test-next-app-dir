@@ -11,5 +11,16 @@
   "about": {
     "title": "Chi Siamo",
     "subtitle": "Siamo nati nel 1999 ..."
+  },
+  "auth": {
+    "login": {
+      "title": "Accedi"
+    }
+  },
+  "dashboard": {
+    "overview": {
+      "title": "Overview",
+      "body": "Seleziona una sezione dal menu a sinistra"
+    }
   }
 }

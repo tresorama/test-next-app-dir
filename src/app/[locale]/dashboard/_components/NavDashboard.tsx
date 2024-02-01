@@ -1,8 +1,8 @@
 'use client';
 
 import Link from "@/i18n/client/i18n.link";
-import { usePathname } from 'next/navigation';
 import { cn } from '@/utils/cn';
+import { useLocaleData } from "@/i18n/client/i18n.use-locale-data";
 
 const navItems: Array<{
   name: string,
@@ -14,7 +14,7 @@ const navItems: Array<{
   ];
 
 export const NavDashboard = () => {
-  const pathname = usePathname();
+  const { pathnameWithoutLocale } = useLocaleData();
 
   return (
     <nav>
@@ -25,7 +25,7 @@ export const NavDashboard = () => {
               href={item.url}
               className={cn(
                 "underline", {
-                "opacity-30 hover:opacity-80": pathname !== item.url,
+                "opacity-30 hover:opacity-80": pathnameWithoutLocale !== item.url,
               })}
             >{item.name}</Link>
           </li>

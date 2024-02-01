@@ -3,6 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from "zod";
 import { getUserByCredentials } from "./get-user-by-credentials";
 import Github from "next-auth/providers/github";
+import { NextResponse } from "next/server";
 
 export const {
   auth,
@@ -11,6 +12,7 @@ export const {
   handlers,
 } = NextAuth({
   // debug: true,
+  trustHost: true,
   session: {
     // @see https://authjs.dev/concepts/session-strategies
     // the `session` is the object that is created after a successfull login attempt
@@ -85,7 +87,7 @@ export const {
         const callbackUrl = request.nextUrl.searchParams.get('callbackUrl') ?? '';
         if (callbackUrl) {
           console.log({ result: "user is logged and callback url in search params => redirect to callback url" });
-          return Response.redirect(callbackUrl);
+          return NextResponse.redirect(callbackUrl);
         }
 
         console.log({ result: "user is logged => return true" });

@@ -9,7 +9,7 @@ export type MiddlewareFunction = (
   next: GoNextMiddleware,
   event: NextFetchEvent,
 ) =>
-  | Promise<NextResponse<unknown> | ReturnType<GoNextMiddleware>>;
+  | Promise<NextResponse<unknown> | Response | ReturnType<GoNextMiddleware>>;
 
 export function composeMiddleware(handlers: MiddlewareFunction[] = []) {
   const validMiddlewareHandlers = handlers
@@ -17,13 +17,25 @@ export function composeMiddleware(handlers: MiddlewareFunction[] = []) {
 
   return async function (request: NextRequest, event: NextFetchEvent) {
 
-    const allResponses: NextResponse[] = [];
+    const allResponses: (NextResponse | Response)[] = [];
 
     // 1. 
     // run every middleware and collect responses (NextResponse)
     // until a middleware want to break the chain (redirect or rewrite)
     for (const fn of validMiddlewareHandlers) {
       const result = await fn(request, () => "continue", event);
+
+      // ensure that fn returned  something or notify the dev
+      if (
+        result !== 'continue' &&
+        !(result instanceof NextResponse) &&
+        !(result instanceof Response)
+      ) {
+        console.error(
+          `The middleware chain has been broken because '${fn.name}' did not return a NextResponse or call next(). Returned `, result
+        );
+        return NextResponse.next();
+      }
 
       // go next middleware
       if (result === 'continue') continue;

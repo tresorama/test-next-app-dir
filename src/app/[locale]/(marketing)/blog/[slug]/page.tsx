@@ -13,6 +13,7 @@ export async function generateStaticParams() {
 
 type PageProps = {
   params: {
+    locale: string,
     slug: string,
   };
 };
@@ -39,7 +40,7 @@ export default async function Page(props: PageProps) {
           height={900}
         />
         <div
-          className="mt-4 prose"
+          className="mt-4 prose dark:prose-invert"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </article>

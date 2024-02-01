@@ -8,13 +8,11 @@ export const useLocaleData = () => {
   const {
     pathnameWithoutLocale,
     currentLocale,
-    pathIsMultilangual
   } = extractLocaleDataFromPathname(pathname);
 
   return {
     pathname,
     pathnameWithoutLocale,
     currentLocale,
-    pathIsMultilangual,
   };
 };
