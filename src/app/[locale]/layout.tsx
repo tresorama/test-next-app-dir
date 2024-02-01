@@ -26,11 +26,6 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 
-
-export async function generateStaticParams() {
-  return supportedLocales.map(locale => ({ locale }));
-}
-
 export default async function RootLayout({ params, children }: LayoutProps) {
   // const headerList = headers();
 

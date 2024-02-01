@@ -2,8 +2,6 @@ import { getDictionary } from "@/i18n/server/i18n.dictionaries";
 import { LoginForm } from "./_components/form-login";
 import { OAuthButtons } from "./_components/oauth-buttons";
 
-
-
 type PageProps = {
   params: {
     locale: string,

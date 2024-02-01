@@ -1,4 +1,9 @@
+import { supportedLocales } from "@/i18n/i18n.config";
 import { getDictionary } from "@/i18n/server/i18n.dictionaries";
+
+export async function generateStaticParams() {
+  return supportedLocales.map(locale => ({ locale }));
+}
 
 type PageProps = {
   params: {

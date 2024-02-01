@@ -1,5 +1,10 @@
+import { supportedLocales } from "@/i18n/i18n.config";
 import { headers } from "next/headers";
 import Link from "next/link";
+
+export async function generateStaticParams() {
+  return supportedLocales.map(locale => ({ locale }));
+}
 
 export default async function Page() {
   const headersList = headers();

@@ -1,15 +1,21 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getAllBlogPosts, getBlogPostBySlug } from "../_data";
+import { supportedLocales } from "@/i18n/i18n.config";
+
+// Return a list of `params` to populate the [slug] dynamic segment
+export async function generateStaticParams() {
+  const locales = supportedLocales;
+  const blogPost = await getAllBlogPosts();
+  return locales.flatMap(locale => {
+    return blogPost.map(post => ({ locale, slug: post.slug }));
+  });
+}
+
 
 // utils
 const formatDate = (date: Date) => new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'long' }).format(date);
 
-// Return a list of `params` to populate the [slug] dynamic segment
-export async function generateStaticParams() {
-  const blogPost = await getAllBlogPosts();
-  return blogPost.map(post => ({ slug: post.slug }));
-}
 
 type PageProps = {
   params: {
